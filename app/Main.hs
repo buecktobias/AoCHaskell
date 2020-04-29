@@ -6,9 +6,8 @@ main = do
         contents <- readFile "input/input1.txt"
         let list =  words contents
         let intList = map readInt list
-        let fuelList = map Day1.fuelNeeded intList
-        print (sum fuelList)
--- alternately, main = print . map readInt . words =<< readFile "test.txt"
+        let result = Day1.sumFuel2 intList
+        print (result)
 
 readInt :: String -> Int
 readInt = read
