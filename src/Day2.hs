@@ -38,6 +38,17 @@ executeIntProgramAtPosition intProgram position
                                                     
                                                     where
                                                     optCode = intProgram !! position
+
+
+resultIntProgramNounVerb:: [Int] -> Int -> Int -> Int
+resultIntProgramNounVerb intProgram noun verb = result
+                                                where
+                                                restoredIntProgram = setNounAndVerb intProgram noun verb
+                                                result = resultIntProgram restoredIntProgram
+
+
+resultIntProgram:: [Int] -> Int
+resultIntProgram intProgram = head (executeIntProgram intProgram)
                                                     
 executeIntProgram:: [Int] -> [Int]
 executeIntProgram intProgram = executeIntProgramAtPosition intProgram startPosition
@@ -47,4 +58,12 @@ executeIntProgram intProgram = executeIntProgramAtPosition intProgram startPosit
 restoreIntProgram:: [Int] -> [Int]
 restoreIntProgram intProgram = newIntProgram
                               where 
-                              newIntProgram = Lib.updateListElement (Lib.updateListElement intProgram 1 12) 2 2                                                    
+                              newIntProgram = setNounAndVerb intProgram 12 2      
+
+setNounAndVerb:: [Int] -> Int -> Int -> [Int]
+setNounAndVerb intProgram noun verb = newIntProgram
+                                    where 
+                                    newIntProgram = Lib.updateListElement (Lib.updateListElement intProgram 1 noun) 2 verb
+
+bruteForceIntProgram:: [Int] -> Int -> (Int, Int)
+bruteForceIntProgram intProgram expectedResult = head (filter (\(x, y) -> (resultIntProgramNounVerb intProgram x y) == expectedResult )  (zip [0 .. 100] [0 .. 100]))                                           

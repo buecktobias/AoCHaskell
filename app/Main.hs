@@ -8,6 +8,6 @@ main = do
   contents <- readFile "input/input2.txt"
   let list = split ',' contents
   let intList = map Lib.readInt list
-  let restoredProgram = Day2.restoreIntProgram intList
-  let testExecuted = Day2.executeIntProgram restoredProgram
-  print testExecuted !! 0
+  let result = Day2.resultIntProgramNounVerb intList 12 2
+  print result
+  
