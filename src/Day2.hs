@@ -28,14 +28,17 @@ getOptCodeFunction optCode
 executeIntProgramAtPosition:: [Int] -> Int -> [Int]
 executeIntProgramAtPosition intProgram position 
                                                   | optCode == 99 = intProgram
-                                                  | otherwise = 
+                                                  | optCode == 1 || optCode == 2  = 
                                                     let 
                                                     optCodeFunc = getOptCodeFunction optCode
                                                     newIntProgram = executeOptCode optCodeFunc position intProgram 
                                                     newPosition = position + 4
                                                     in 
+                                                    
                                                     executeIntProgramAtPosition newIntProgram newPosition  
                                                     
+                                                  | otherwise = intProgram
+                                                  
                                                     where
                                                     optCode = intProgram !! position
 
@@ -65,5 +68,13 @@ setNounAndVerb intProgram noun verb = newIntProgram
                                     where 
                                     newIntProgram = Lib.updateListElement (Lib.updateListElement intProgram 1 noun) 2 verb
 
+
 bruteForceIntProgram:: [Int] -> Int -> (Int, Int)
-bruteForceIntProgram intProgram expectedResult = head (filter (\(x, y) -> (resultIntProgramNounVerb intProgram x y) == expectedResult )  (zip [0 .. 100] [0 .. 100]))                                           
+bruteForceIntProgram intProgram expectedResult =  head results
+                                                where
+                                                xs = [0 .. 100]
+                                                ys = [0 .. 100]
+                                                all_ys = take (100*100) (cycle ys)
+                                                all_xs = concat [replicate 100 x | x <- xs]
+                                                all_combinations = zip all_xs all_ys
+                                                results = filter (\(x,y) -> ( resultIntProgramNounVerb intProgram x y == expectedResult )) all_combinations                            
