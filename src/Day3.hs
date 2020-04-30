@@ -4,14 +4,36 @@ module Day3
   executeCommand,
   executeCommands,
   createStartWire,
+  uniquePositions,
+  wireIntersections,
+  minDistIntersections,
+  distFromStart,
   moveUp)
   where
 
-import Data.Set (Set)             -- This just imports the type name
+import Data.Set (Set, toList)             -- This just imports the type name
 import qualified Data.Set as Set
+import Data.List (sortOn)
 
 data Wire = Wire { positions :: [Position]} deriving (Show)
 
+
+
+distFromStart:: Position -> Int
+distFromStart pos = ( abs (x pos) ) + ( abs (y pos) )
+
+uniquePositions:: Wire -> Set Position
+uniquePositions wire = Set.fromList (tail (positions wire ) )
+
+minDistIntersections:: [Position] -> Int
+minDistIntersections xs = minimum ( map distFromStart xs )
+
+wireIntersections:: Wire -> Wire -> [Position]
+wireIntersections wire1 wire2 = intersect
+                              where
+                              up1 = uniquePositions wire1
+                              up2 = uniquePositions wire2
+                              intersect = toList (Set.intersection up1 up2)
 
 createStartWire:: Wire
 createStartWire = newWire
@@ -22,7 +44,7 @@ createStartWire = newWire
 executeCommandN:: Wire -> [String] -> Int -> Wire
 executeCommandN wire commands n
                                   | n >= (length commands) = wire
-                                  | otherwise = 
+                                  | otherwise =
                                   let
                                   command = commands !! n
                                   newWire = executeCommand wire command
@@ -31,7 +53,7 @@ executeCommandN wire commands n
 
 executeCommands:: Wire -> [String] -> Wire
 executeCommands wire commands = executeCommandN wire commands 0
-                      
+
 
 executeCommand:: Wire -> String -> Wire
 executeCommand wire command = executeN wire amount wireFunc
@@ -89,7 +111,7 @@ addRight wire = Wire wirePositions
 
 data Position = Position{ x :: Int,
                          y :: Int
-                     } deriving (Show)
+                     } deriving (Show, Eq, Ord)
 
 moveUp:: Position -> Position
 moveUp pos = Position newX newY

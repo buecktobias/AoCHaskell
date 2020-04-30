@@ -9,8 +9,11 @@ main = do
   contents <- readFile "input/input3.txt"
   let list = split '\n' contents
   let lines = map (\line -> split ',' line) list
-  let commands = ["R10", "U5"]
-  print ( createStartWire )
-  let wire2 = executeCommands createStartWire commands
-  print( wire2 )
+  let commands1 = lines !! 0
+  let commands2 = lines !! 1
+  let wire1 = executeCommands createStartWire commands1
+  let wire2 = executeCommands createStartWire commands2
+  let intersections = wireIntersections wire1 wire2
+  print intersections
+  print (minDistIntersections intersections)
 
