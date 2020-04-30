@@ -1,8 +1,14 @@
 module Lib where
 
+updateListElement:: [a] -> Int -> a -> [a]
+updateListElement list index newElement = xs ++ [newElement] ++ (tail ys)
+                                          where 
+                                          (xs, ys) = splitAt index list
 
-addElement:: [String] -> String -> [String]
-addElement ls e = ls ++ [e]
+readInt :: String -> Int
+readInt = read
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+split :: Char -> String -> [String]
+split c xs = case break (==c) xs of 
+  (ls, "") -> [ls]
+  (ls, x:rs) -> ls : split c rs
