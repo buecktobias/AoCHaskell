@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b13e6c23ed411a6b0177f92b852d550af2e59cbdcc5aa3754653fa9a124ba7fc
+-- hash: be31f705715bd4e8e84558540b31dd01ae1891ebd496d423dd9ae702348aca54
 
 name:           AoCHaskell
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
   exposed-modules:
       Day1
       Day2
+      Day3
       Lib
   other-modules:
       Paths_AoCHaskell
