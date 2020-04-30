@@ -2,11 +2,36 @@ module Day3
   (Wire(..),
   Position(..),
   executeCommand,
+  executeCommands,
+  createStartWire,
   moveUp)
   where
 
+import Data.Set (Set)             -- This just imports the type name
+import qualified Data.Set as Set
+
 data Wire = Wire { positions :: [Position]} deriving (Show)
 
+
+createStartWire:: Wire
+createStartWire = newWire
+                  where
+                  startPositions = [ Position {x=0, y=0} ]
+                  newWire = Wire {positions=startPositions}
+
+executeCommandN:: Wire -> [String] -> Int -> Wire
+executeCommandN wire commands n
+                                  | n >= (length commands) = wire
+                                  | otherwise = 
+                                  let
+                                  command = commands !! n
+                                  newWire = executeCommand wire command
+                                  in
+                                  executeCommandN newWire commands ( n + 1 )
+
+executeCommands:: Wire -> [String] -> Wire
+executeCommands wire commands = executeCommandN wire commands 0
+                      
 
 executeCommand:: Wire -> String -> Wire
 executeCommand wire command = executeN wire amount wireFunc
