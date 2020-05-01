@@ -8,8 +8,9 @@ main = do
   let lines = map (\line -> split ',' line) list
   let commands1 = lines !! 0
   let commands2 = lines !! 1
-  let v1 = Day3_v2.Vector{x=3,y=3}
-  let v2 = Day3_v2.Vector{x=6,y=3}
-  print v2
-  print (subtractVector v2 v1)
+  let v1 = Day3_v2.Vector 3 3
+  let v2 = Day3_v2.Vector 6 3
+  let slope = Slope v1 v2
+  print slope
+  print (directionVector slope)
 
