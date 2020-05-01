@@ -1,9 +1,6 @@
 module Main where
-import Day3
+import Day3_v2
 import Lib
-
-import Data.Set (Set)             -- This just imports the type name
-import qualified Data.Set as Set
 main :: IO ()
 main = do
   contents <- readFile "input/input3.txt"
@@ -11,9 +8,8 @@ main = do
   let lines = map (\line -> split ',' line) list
   let commands1 = lines !! 0
   let commands2 = lines !! 1
-  let wire1 = executeCommands createStartWire commands1
-  let wire2 = executeCommands createStartWire commands2
-  let intersections = wireIntersections wire1 wire2
-  print intersections
-  print (minDistIntersections intersections)
+  let v1 = Day3_v2.Vector{x=3,y=3}
+  let v2 = Day3_v2.Vector{x=6,y=3}
+  print v2
+  print (subtractVector v2 v1)
 
