@@ -15,5 +15,5 @@ main = do
   let v4 = Day3_v2.Vector 5 0
   let slope1 = Slope v1 v2
   let slope2 = Slope v3 v4
-  print (pointsSlope slope1 )
+  print (intersectionSlopes slope1 slope2 )
 

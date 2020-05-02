@@ -1,13 +1,22 @@
 module Day3_v2 where
 
-data Vector = Vector{x::Int, y::Int} deriving Show
+import Data.Set
+data Vector = Vector{x::Int, y::Int} deriving (Show, Eq, Ord)
+
+
+intersectionPointsSlope:: Slope -> Slope -> [Vector]
+intersectionPointsSlope s1 s2 = toList intersecting_points
+                    where
+                    points1 = fromList (pointsSlope s1)
+                    points2 = fromList (pointsSlope s2)
+                    intersecting_points = intersection points1 points2
 
 
 -- v1 - v2 = v3
 subtractVector:: Vector -> Vector -> Vector
 subtractVector (Vector x1 y1) (Vector x2 y2) = Vector (x1 - x2) (y1 - y2)
 
-data Slope = Slope{startVec::Vector, endVec::Vector} deriving Show
+data Slope = Slope{startVec::Vector, endVec::Vector} deriving (Show, Eq, Ord)
 
 
 calculateTU:: Slope -> Slope -> (Int, Int)
@@ -34,10 +43,10 @@ points s1@(Slope _ (Vector endX endY))(Vector x1 y1)
             
 
 
-intersection :: Slope -> Slope -> [Vector]
-intersection s1@(Slope v1@(Vector x1 y1) v2@(Vector x2 y2)) s2@(Slope  v3@(Vector x3 y3) v4@(Vector x4 y4))
+intersectionSlopes :: Slope -> Slope -> [Vector]
+intersectionSlopes s1@(Slope v1@(Vector x1 y1) v2@(Vector x2 y2)) s2@(Slope  v3@(Vector x3 y3) v4@(Vector x4 y4))
                                                                                               -- parallel
-                                                                                              | denominator == 0 = []
+                                                                                              | denominator == 0 = intersectionPointsSlope s1 s2
                                                                                               -- not parallel
                                                                                               |otherwise =
                                                                                                            let
