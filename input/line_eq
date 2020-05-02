@@ -1,0 +1,8 @@
+-x1 y3 + x1 y4 + y1 (-x4) + x3 y1 + x2 y3 - x2 y4 + y2 x4 - x3 y2 != 0 ∧
+
+t = (-x1 y3 + x1 y4 + y1 (-x4) + x3 y1 + y3 x4 - x3 y4) /
+    (-x1 y3 + x1 y4 + y1 (-x4) + x3 y1 + x2 y3 - x2 y4 + y2 x4 - x3 y2)
+
+ ∧ x3 - x4 !=0 ∧
+ 
+u = (x1 y2 - x1 y3 + y1 (-x2) + x3 y1 + x2 y3 - x3 y2)/(-x1 y3 + x1 y4 + y1 (-x4) + x3 y1 + x2 y3 - x2 y4 + y2 x4 - x3 y2)
