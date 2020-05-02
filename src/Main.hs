@@ -8,9 +8,12 @@ main = do
   let lines = map (\line -> split ',' line) list
   let commands1 = lines !! 0
   let commands2 = lines !! 1
-  let v1 = Day3_v2.Vector 3 3
+  let v1 = Day3_v2.Vector 2 3
   let v2 = Day3_v2.Vector 6 3
-  let slope = Slope v1 v2
-  print slope
-  print (directionVector slope)
+
+  let v3 = Day3_v2.Vector 0 3
+  let v4 = Day3_v2.Vector 4 3
+  let slope1 = Slope v1 v2
+  let slope2 = Slope v3 v4
+  print ( intersection slope1 slope2 )
 
