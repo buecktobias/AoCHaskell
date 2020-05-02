@@ -32,9 +32,9 @@ pointsSlope slope@(Slope start end) = points slope start
 
               
 points:: Slope -> Vector -> [Vector]
-points s1@(Slope _ (Vector endX endY))(Vector x1 y1)
-            | new_vec_x == endX && new_vec_y == endY = [new_vec]
-            | otherwise = new_vec : (points s1 new_vec)
+points s1@(Slope _ (Vector endX endY)) v@(Vector x1 y1)
+            | x1 == endX && y1 == endY = [v]
+            | otherwise = v : (points s1 new_vec)
             where
             dir = directionVector s1
             (Vector xDir yDir) = unitVector dir
