@@ -4,6 +4,11 @@ import Data.Set
 data Vector = Vector{x::Int, y::Int} deriving (Show, Eq, Ord)
 
 
+distanceNearestVector:: [Vector] -> Int
+distanceNearestVector vs = vsLength !! 1
+                          where
+                          vsLength = Prelude.map lengthVector vs
+
 intersectionPointsSlope:: LineSegment -> LineSegment -> [Vector]
 intersectionPointsSlope s1 s2 = toList intersecting_points
                     where
@@ -19,12 +24,13 @@ subtractVector (Vector x1 y1) (Vector x2 y2) = Vector (x1 - x2) (y1 - y2)
 data LineSegment = LineSegment{startVec::Vector, endVec::Vector} deriving (Show, Eq, Ord)
 
 
-calculateTU:: LineSegment -> LineSegment -> (Int, Int)
-calculateTU (LineSegment (Vector x1 y1) (Vector x2 y2)) (LineSegment (Vector x3 y3) (Vector x4 y4))   = (t, u)
-                where
-                denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
-                t = ( ( ( x1 - x3 ) * ( y3 - y4 ) ) - ( ( y1 - y3 ) * ( x3 - x4 ))) `div`  denominator
-                u = (( ( x1 -  x2) * (y1 - y3)) - ( ( y1 - y2 ) * (x1 - x3) )) `div` denominator
+calculateTU:: LineSegment -> LineSegment -> (Float, Float)
+calculateTU (LineSegment (Vector x1 y1) (Vector x2 y2)) (LineSegment (Vector x3 y3) (Vector x4 y4)) = (t, u)
+  where
+    denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    t_1 = (x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)
+    t = fromIntegral t_1 / fromIntegral denominator
+    u = 0.0
 
 
 pointsSlope:: LineSegment -> [Vector]
@@ -44,25 +50,21 @@ points s1@(LineSegment _ (Vector endX endY)) v@(Vector x1 y1)
 
 
 intersectionSlopes :: LineSegment -> LineSegment -> [Vector]
-intersectionSlopes s1@(LineSegment v1@(Vector x1 y1) v2@(Vector x2 y2)) s2@(LineSegment  v3@(Vector x3 y3) v4@(Vector x4 y4))
+intersectionSlopes s1@(LineSegment v1@(Vector x1 y1) v2@(Vector x2 y2)) s2@(LineSegment v3@(Vector x3 y3) v4@(Vector x4 y4))
                                                                                               -- parallel
-                                                                                              | denominator == 0 = intersectionPointsSlope s1 s2
+  | denominator == 0 = intersectionPointsSlope s1 s2
                                                                                               -- not parallel
-                                                                                              |otherwise =
-                                                                                                           let
-                                                                                                           (t, u) = calculateTU s1 s2
-                                                                                                           in
-                                                                                                           if t >= 0 && t <= 1 then let
-                                                                                                                                 intersection_x = x1  + t * (x2 - x1)
-                                                                                                                                 intersection_y = y1 + t * (y2 - y1)
-                                                                                                                                 in
-                                                                                                                                 [Vector intersection_x intersection_y]
-                                                                                                            else []
-
-                                                                                              where
-                                                                                              denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
-                                                                                              s1Dir@(Vector s1DirX s1_dir_y) = directionVector s1
-                                                                                              s2_dir = directionVector s2
+  | otherwise =
+    let (t, u) = calculateTU s1 s2
+     in if t >= 0 && t <= 1
+          then let intersection_x = round (fromIntegral x1 + t * (fromIntegral (x2 - x1)))
+                   intersection_y = round (fromIntegral y1 + t * (fromIntegral (y2 - y1)))
+                in [Vector intersection_x intersection_y]
+          else []
+  where
+    denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    s1Dir@(Vector s1DirX s1_dir_y) = directionVector s1
+    s2_dir = directionVector s2
 lengthVector:: Vector -> Int
 lengthVector (Vector x1 y1) =( abs x1 ) + (abs y1)
 
@@ -114,17 +116,16 @@ createAddLineSegments w (s:ss) = createAddLineSegments new_wire ss
                             new_wire = createAddLineSegment w s
 
 intersectionsLineSegmentLineSegments:: LineSegment -> [LineSegment] -> [Vector]
-intersectionsLineSegmentLineSegments s1 lineSegments = Prelude.foldr ((++) .  (\s2 -> intersectionSlopes s1 s2)) [] lineSegments
+intersectionsLineSegmentLineSegments s1 [s2] = intersectionSlopes s1 s2
+intersectionsLineSegmentLineSegments s1 (s2:lineSegments) = intersectionSlopes s1 s2 ++ intersectionsLineSegmentLineSegments s1 lineSegments
 
 intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments:: [LineSegment] -> [LineSegment] -> [Vector]
-intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments [] ss = []
-intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments lineSegments1 lineSegments2 = vectorIntersections ++ intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments newLineSegments1 lineSegments2
+intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments [lineSegment] lineSegments2 = intersectionsLineSegmentLineSegments lineSegment lineSegments2
+intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments (lineSegment:lineSegments1) lineSegments2 = vectorIntersections ++ intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments lineSegments1 lineSegments2
                                                                                             where
-                                                                                            lineSegment1 = head lineSegments1
-                                                                                            newLineSegments1 = tail lineSegments1
-                                                                                            vectorIntersections = intersectionsLineSegmentLineSegments lineSegment1 lineSegments2
+                                                                                            vectorIntersections = intersectionsLineSegmentLineSegments lineSegment lineSegments2
 intersectionsWires:: Wire -> Wire -> [Vector]
 intersectionsWires (Wire ss1 _) (Wire ss2 _) =  intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments ss1 ss2
-
+-- toList (fromList (
 
 

@@ -3,18 +3,22 @@ import Day3_v2
 import Lib
 main :: IO ()
 main = do
-  contents <- readFile "input/input3.txt"
+  contents <- readFile "input/input3_test_1.txt"
   let list = split '\n' contents
   let lines = map (\line -> split ',' line) list
+
   let commands1 = lines !! 0
   let commands2 = lines !! 1
-  let v1 = Day3_v2.Vector 0 0
-  let v2 = Day3_v2.Vector 3 0
 
-  let v3 = Day3_v2.Vector 1 0
-  let v4 = Day3_v2.Vector 5 0
-  let ls1 = [LineSegment v1 v2, LineSegment v2  (Vector 3 3), LineSegment (Vector 3 3) (Vector 7 3)]
-  let ls2 = [LineSegment (Vector 5 5) (Vector 0 5)]
+  let wire1 = Wire [] (Vector 0 0)
+  let wire2 = Wire [] (Vector 0 0)
 
-  print (intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments ls1 ls2 )
+  let last =  (LineSegment (Vector 3 2) (Vector 3 5))
+  let last2 =  (LineSegment (Vector 2 3) (Vector 6 3))
+
+  let wire1_ = createAddLineSegments wire1 ["R8","U5","L5","D3"]
+  let wire2_ = createAddLineSegments wire2 ["U7","R6","D4","L4"]
+
+  let ls2 = slopes wire2_
+  print(calculateTU last last2)
 
