@@ -13,7 +13,8 @@ main = do
 
   let v3 = Day3_v2.Vector 1 0
   let v4 = Day3_v2.Vector 5 0
-  let slope1 = Slope v1 v2
-  let slope2 = Slope v3 v4
-  print (intersectionSlopes slope1 slope2 )
+  let ls1 = [LineSegment v1 v2, LineSegment v2  (Vector 3 3), LineSegment (Vector 3 3) (Vector 7 3)]
+  let ls2 = [LineSegment (Vector 5 5) (Vector 0 5)]
+
+  print (intersectionBetweenMultipleLineSegmentsAndMultipleLieSegments ls1 ls2 )
 
